@@ -1,6 +1,7 @@
 package com.stos.italo.projetofilme;
-
+// classe apenas para modelar obj
 public class Filme {
+
     private String id;
     private String titulo;
     private String descricao;
