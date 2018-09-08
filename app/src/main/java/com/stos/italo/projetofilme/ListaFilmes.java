@@ -7,7 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -115,7 +119,6 @@ public class ListaFilmes extends AppCompatActivity {
             super.onPostExecute(filmes);
             CustomAdapter adapter = new CustomAdapter(getApplicationContext(),R.layout.bloco,filmes);
             listView.setAdapter(adapter);
-
         }
     }
 
