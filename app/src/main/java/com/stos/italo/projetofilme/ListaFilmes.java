@@ -2,6 +2,7 @@ package com.stos.italo.projetofilme;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,18 +35,19 @@ public class ListaFilmes extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(ListaFilmes.this, Detalhe.class);
-                intent.putExtra("Titulo",listView.getItemAtPosition(position).toString());
-                startActivity(intent);
-            }
-        });
+            Intent i = new Intent(ListaFilmes.this, Detalhe.class);
+            // passei 10 horas nessa linha abaixo meu deus do ceu kkkkk
+            i.putExtra("filme" , (Serializable) listView.getItemAtPosition(position));
+            startActivity(i);
+        }
+    });
 
         JsonWork jsonWork = new JsonWork();
         jsonWork.execute();
     }
 
 
-    private class JsonWork extends AsyncTask<String,String,List<Filme>>{
+    public class JsonWork extends AsyncTask<String,String,List<Filme>>{
 
         //requisicao http
         HttpURLConnection httpURLConnection = null;
@@ -69,7 +72,7 @@ public class ListaFilmes extends AppCompatActivity {
 
                 }
                 FullJsonData =  stringBuffer.toString();
-                List<Filme> jsonModelList = new ArrayList<>();
+                List<Filme> listaFilme = new ArrayList<>();
 
                 JSONObject jsonStartingObject = new JSONObject(FullJsonData);
                 JSONArray  jsonFilmeArray = jsonStartingObject.getJSONArray("filmes");
@@ -80,11 +83,15 @@ public class ListaFilmes extends AppCompatActivity {
                     JSONObject jsonUnderArrayObject = jsonFilmeArray.getJSONObject(i);
 
                     Filme filme = new Filme();
+                    filme.setId(jsonUnderArrayObject.getString("id"));
                     filme.setTitulo(jsonUnderArrayObject.getString("titulo"));
-                    jsonModelList.add(filme);
+                    filme.setDescricao(jsonUnderArrayObject.getString("descricao"));
+                    filme.setCapa(jsonUnderArrayObject.getString("capa"));
+                    filme.setUrl_imagem(jsonUnderArrayObject.getString("url_imagem"));
+                    listaFilme.add(filme);
                 }
 
-                return jsonModelList;
+                return listaFilme;
 
 
             } catch (JSONException | IOException e) {
@@ -104,11 +111,10 @@ public class ListaFilmes extends AppCompatActivity {
         }
 
         //montando os blocos com o adapter
-        @Override        protected void onPostExecute(List<Filme> jsonModels) {
-            super.onPostExecute(jsonModels);
-            CustomAdapter adapter = new CustomAdapter(getApplicationContext(),R.layout.bloco,jsonModels);
+        @Override   protected void onPostExecute(List<Filme> filmes) {
+            super.onPostExecute(filmes);
+            CustomAdapter adapter = new CustomAdapter(getApplicationContext(),R.layout.bloco,filmes);
             listView.setAdapter(adapter);
-
 
         }
     }

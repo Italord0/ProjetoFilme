@@ -1,6 +1,9 @@
 package com.stos.italo.projetofilme;
+
+import java.io.Serializable;
+
 // classe apenas para modelar obj
-public class Filme {
+public class Filme implements Serializable {
 
     private String id;
     private String titulo;

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-class CustomAdapter extends BaseAdapter{
+class  CustomAdapter extends BaseAdapter{
 
     private Context applicationContext;
     private int exemplo;
@@ -54,6 +54,7 @@ class CustomAdapter extends BaseAdapter{
 
         //busca de ids do layout
         title= view.findViewById(R.id.titulo);
+
         //muda o id do layout
         title.setText(filmes.get(i).getTitulo());
 
