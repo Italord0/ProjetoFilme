@@ -1,8 +1,11 @@
 package com.stos.italo.projetofilme;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,13 +21,23 @@ import java.util.List;
 
 public class ListaFilmes extends AppCompatActivity {
 
+        ListView listView;
 
-    private ListView l1;
+
     @Override    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_filmes);
+        getSupportActionBar().setTitle("Filmes");
 
-        l1 = (ListView) findViewById(R.id.l1);
+        listView = (ListView) findViewById(R.id.l1);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(ListaFilmes.this, Detalhe.class);
+                intent.putExtra("Titulo",listView.getItemAtPosition(position).toString());
+                startActivity(intent);
+            }
+        });
 
         JsonWork jsonWork = new JsonWork();
         jsonWork.execute();
@@ -94,7 +107,7 @@ public class ListaFilmes extends AppCompatActivity {
         @Override        protected void onPostExecute(List<Filme> jsonModels) {
             super.onPostExecute(jsonModels);
             CustomAdapter adapter = new CustomAdapter(getApplicationContext(),R.layout.bloco,jsonModels);
-            l1.setAdapter(adapter);
+            listView.setAdapter(adapter);
 
 
         }
